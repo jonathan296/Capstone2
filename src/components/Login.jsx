@@ -3,14 +3,37 @@ import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
   const Navigate = useNavigate();
-  const [token, setToken] = useState(null)  
+  const [token, setToken] = useState(null)
+  const [userName, setUserName] = useState('')
+  const [userPass, setUserPass] = useState('')
+  const cohortName = '2302-acc-pt-web-pt-b';
+  const APIURL = `https://strangers-things.herokuapp.com/api/${cohortName}/`;
 
-
-  async function handleSubmit(e) {
+  const login = async (e) => {
     e.preventDefault();
-    console.log("Hello World");
-   
+    try {
+      const response = await fetch(`${APIURL}/users/login`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user: {
+            username: userName,
+            password: userPass
+          }
+        })
+      });
+      const result = await response.json();
+      console.log(result);
+      if(!result.success){alert(result.error.message)}else{alert(result.data.message)}
+      setToken(result.data.token)
+      return result
+    } catch (err) {
+      console.error(err);
+    }
   }
+
   useEffect(
     ()=>{
         if(token){
@@ -19,10 +42,25 @@ export default function Login() {
 
     },[token])
 
+    function handleUsername(e) {
+      
+        setUserName(e.target.value)
+        
+     }
+     function handlePassword(e) {
+       
+       setUserPass(e.target.value)
+       
+    }
+ 
+
+
+
+
   return (
     <div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={login}>
           <div>
             <label
               htmlFor="email"
@@ -35,6 +73,7 @@ export default function Login() {
                 id="email"
                 name="email"
                 type="email"
+                onChange={handleUsername}
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -62,6 +101,7 @@ export default function Login() {
                 id="password"
                 name="password"
                 type="password"
+                onChange={handlePassword}
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -76,15 +116,15 @@ export default function Login() {
             </button>
           </div>
         </form>
-        <p className="mt-10 text-center text-sm text-gray-500">
+        <div className="mt-10 text-center text-sm text-gray-500">
           Not a member?
-          <a
+          <div
             href="#"
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
             <Link to='/register'>Register</Link>
-          </a>
-        </p>
+          </div>
+        </div>
       </div>
     </div>
   );

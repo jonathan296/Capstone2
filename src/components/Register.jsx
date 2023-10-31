@@ -9,9 +9,8 @@ export default function Register() {
   const cohortName = '2302-acc-pt-web-pt-b';
   const APIURL = `https://strangers-things.herokuapp.com/api/${cohortName}/`;
 
-
+  
   const registerUser = async (e) => {
-    console.log('hello world')
     e.preventDefault();
     try {
       const response = await fetch(
