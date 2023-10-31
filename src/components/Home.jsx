@@ -1,6 +1,10 @@
+
+
 export default function Home(){
     return(
-    <div className="text-6xl text-center">Welcome!</div>
+    <div>
+        <h1 className="text-8xl text-center m-64">Welcome!</h1>
+    </div>
     )
 }
 

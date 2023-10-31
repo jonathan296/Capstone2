@@ -9,6 +9,7 @@ export default function Products(){
     const [sort, setSort] = useState("?sort=asc")
     const [category, setCategory] = useState("")
     const [query, setQuery] = useState('')
+
     const APIURL = `https://fakestoreapi.com/products${category}${sort}`
     
     
@@ -35,19 +36,28 @@ export default function Products(){
                 break;
         }
         
-    }  
-
-    console.log(APIURL)
-
-
+    }
+      
+    function searchBar(product){
+        if(query === ''){
+            return product
+        }else if(product.title.toLowerCase().includes(query.toLowerCase())){
+            return product
+        }
+    }
+    
     return(
         <div className='flex flex-col justify-center it bg-gray-100'>
+            
             <div className='flex justify-center flex-row items-center mb-6'>
-                Search:<input type='text' className='w-80 mx-2 p-2 rounded-lg shadow-sm'></input>
+                Search:<input type='text' placeholder='Type here' onChange={event => setQuery(event.target.value)} className='w-80 mx-2 p-2 rounded-lg shadow-sm'></input>            
             </div>
             
+
+            
+
             <div className='flex gap-3 mb-4 mr-10 ml-10 justify-end'>
-                Category:<button onClick={()=>{setCategory("/category/jewelery")}} className='px-4 py-2 bg-gray-700 text-white text-xs font-bold uppercase rounded hover:bg-gray-600 focus:outline-none focus:bg-gray-300'>Jewelery</button>
+                Filter:<button onClick={()=>{setCategory("/category/jewelery")}} className='px-4 py-2 bg-gray-700 text-white text-xs font-bold uppercase rounded hover:bg-gray-600 focus:outline-none focus:bg-gray-300'>Jewelery</button>
                 <button onClick={()=>{setCategory("/category/electronics")}} className='px-4 py-2 bg-gray-700 text-white text-xs font-bold uppercase rounded hover:bg-gray-600 focus:outline-none focus:bg-gray-300'>Electronics</button>
                 <button onClick={()=>{setCategory("/category/men's%20clothing")}} className='px-4 py-2 bg-gray-700 text-white text-xs font-bold uppercase rounded hover:bg-gray-600 focus:outline-none focus:bg-gray-300'>Men&apos;s Clothing</button>
                 <button onClick={()=>{setCategory("/category/women's%20clothing")}} className='px-4 py-2 bg-gray-700 text-white text-xs font-bold uppercase rounded hover:bg-gray-600 focus:outline-none focus:bg-gray-300'>women&apos;s clothing</button>
@@ -56,7 +66,7 @@ export default function Products(){
             </div>
             <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-10'>
                 {
-                products.map(product => (
+                products.filter(searchBar).map(product => (
                     <div key={product.id} className='bg-white shadow-md rounded-lg px-10 py-10 flex flex-col justify-between gap-3 '>
                     <img src={product.image} alt={product.title} className='rounded-md w-auto h-40 self-center ' />
                     <div className='mt-4'>
